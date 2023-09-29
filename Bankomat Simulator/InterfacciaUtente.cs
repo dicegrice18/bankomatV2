@@ -20,14 +20,14 @@ namespace BankomatSimulator
             Prelievo,
             Uscita
         };
+        
+        private List<Banche> _banche;
+        private Banche _bancaCorrente;
 
-        private SortedList<int, Banca> _banche;
-        private Banca _bancaCorrente;
-
-        public InterfacciaUtente(SortedList<int,Banca> banche)
-        {
-            _banche = banche;
-        }
+        //public InterfacciaUtente(SortedList<int,Banca> banche)
+        //{
+        //    _banche = banche;
+        //}
 
         /// <summary>
         /// Stampa l'intestazione del menu
@@ -73,20 +73,21 @@ namespace BankomatSimulator
         /// la scelta viene effettuata tra quelle presenti in <see cref="_banche"/>
         /// </summary>
         /// <returns>la scelta dell'utente - 0 per uscire</returns>
-        private int SchermataDiBenvenuto()
+        private int SchermataDiBenvenuto(BankomatEntities ctx)
         {
             int scelta = -1;
             while (scelta == -1)
             {
                 StampaIntestazione("Selezione Banca");
 
-                foreach (var banca in _banche)
+                foreach (var banca in ctx.Banche)
                 {
-                    Console.WriteLine($"{banca.Key.ToString()} - {banca.Value.Nome}");
+                    Console.WriteLine($"{banca.Id}- {banca.Nome}");
+                    _banche.Add(banca);
                 }
                 Console.WriteLine("0 - Uscita");
 
-                scelta = ScegliVoceMenu(0, _banche.Count);
+                scelta = ScegliVoceMenu(0, ctx.Banche.Count());
             }
 
             return scelta;
@@ -267,7 +268,7 @@ namespace BankomatSimulator
         ///Entry point della classe Interfaccia.
         ///Gestisce la navigazione tra i menu e l'interazione con l'utente
         ///</summary>
-        public void Esegui()
+        public void Esegui(BankomatEntities ctx)
         {
             int rispostaUtente = 0;
             Richiesta richiesta = Richiesta.SchermataDiBenvenuto;
@@ -277,7 +278,7 @@ namespace BankomatSimulator
                 switch (richiesta)
                 {
                     case Richiesta.SchermataDiBenvenuto:
-                        rispostaUtente = SchermataDiBenvenuto();
+                        rispostaUtente = SchermataDiBenvenuto(ctx);
                         
                         if (rispostaUtente == 0)
                             richiesta = Richiesta.Uscita;

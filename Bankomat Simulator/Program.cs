@@ -15,7 +15,7 @@ namespace BankomatSimulator
         /// <summary>
         /// Funzione di inizializzazione del Bankomat Simulator.
         /// </summary>
-        private static void Inizializza()
+        /*private static void Inizializza()
         {
             banche = new SortedList<int, Banca>
             {
@@ -79,12 +79,14 @@ namespace BankomatSimulator
 
             };
 
-        }
+        }*/
+
         static void Main(string[] args)
         {
-            Inizializza();
-            InterfacciaUtente interfacciaUtente = new InterfacciaUtente(banche);
-            interfacciaUtente.Esegui();
+            var ctx = new BankomatEntities();
+           // Inizializza();
+            InterfacciaUtente interfacciaUtente = new InterfacciaUtente(ctx.Banche);
+            interfacciaUtente.Esegui(ctx);
         }
     }
 }
